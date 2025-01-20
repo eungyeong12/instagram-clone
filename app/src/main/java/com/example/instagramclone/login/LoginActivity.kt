@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.instagramclone.R
 import com.example.instagramclone.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
+    lateinit var auth : FirebaseAuth
     lateinit var binding: ActivityLoginBinding
     val loginViewModel: LoginViewModel by viewModels()
 
@@ -22,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
         binding.viewModel = loginViewModel
         binding.activity = this
         binding.lifecycleOwner = this
+        auth = FirebaseAuth.getInstance()
         setObserve()
     }
 
@@ -39,8 +42,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun loginEmail() {
-        loginViewModel.showInputNumberActivity.value = true
+    fun loginWithSignupEmail() {
+        auth.createUserWithEmailAndPassword(loginViewModel.id.value.toString(), loginViewModel.password.value.toString()).addOnCompleteListener {
+            if (it.isSuccessful) {
+                loginViewModel.showInputNumberActivity.value = true
+            } else {
+                // 아이디가 있을 경우
+
+            }
+        }
     }
 
     fun findId() {
